@@ -8,6 +8,10 @@ const postSchema = new mongoose.Schema({
     image: {
         type: String,
     },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
     postDate: {
         type: Date,
         default: Date.now
@@ -15,10 +19,6 @@ const postSchema = new mongoose.Schema({
     likes: {
         type: Array,
         default: []
-    },
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
     },
 });
 

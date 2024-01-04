@@ -12,49 +12,19 @@ router.get('/', function (req, res, next) {
   res.render('index');
 });
 
-// router.post('/upload', isLoggedIn, upload.single("file"), async function (req, res) {
-//   if (!req.file) {
-//     return res.status(400).send("No Files were uploaded!");
-//   };
-//   const user = await userModel.findOne({ username: req.session.passport.user });
-//   const postData = await postModel.create({
-//     image: req.file.filename,
-//     imgText: req.body.fileCaption,
-//     user: user._id
-//   });
-//   user.post.push(postData._id);
-//   await user.save();
-//   res.send("done!");
-// });
 router.post('/upload', isLoggedIn, upload.single("file"), async function (req, res) {
   if (!req.file) {
     return res.status(400).send("No Files were uploaded!");
-  }
-
-  try {
-    const user = await userModel.findOne({ username: req.session.passport.user });
-
-    if (!user) {
-      return res.status(404).send("User not found");
-    }
-
-    const postData = await postModel.create({
-      image: req.file.filename,
-      imgText: req.body.fileCaption,
-      user: user._id
-    });
-
-    if (!user.post) {
-      user.post = []; // Initialize user.post as an empty array if it doesn't exist
-    }
-
-    user.post.push(postData._id);
-    await user.save();
-    res.send("Uploading Successful!!");
-  } catch (error) {
-    console.error("Error uploading:", error);
-    res.status(500).send("Error uploading");
-  }
+  };
+  const user = await userModel.findOne({ username: req.session.passport.user });
+  const postData = await postModel.create({
+    image: req.file.filename,
+    imgText: req.body.fileCaption,
+    user: user._id
+  });
+  user.posts.push(postData._id);
+  await user.save();
+  res.redirect("/profile");
 });
 
 router.get('/login', function (req, res, next) {
